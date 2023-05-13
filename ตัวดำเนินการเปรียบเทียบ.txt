@@ -1,15 +1,15 @@
 ตัวดำเนินการเปรียบเทียบ
 ชื่อ
-$eq		เท่ากับ				{field:value}
-$gt		มากกว่า			{field:{$gt:value}}
-$gte	มากกว่าหรือเท่ากับ		{field:{$gte:value}}
-$lt		น้อยกว่า			{field:{$lt:value}}
-$lte	น้อยกว่าหรือเท่ากับ		{field:{$lte:value}}
-$ne		ไม่เท่ากับ			{field:{$ne:value}}
+$eq		เท่ากับ                   {field:value}
+$gt		มากกว่า                  {field:{$gt:value}}
+$gte	มากกว่าหรือเท่ากับ		      {field:{$gte:value}}
+$lt		น้อยกว่า			            {field:{$lt:value}}
+$lte	น้อยกว่าหรือเท่ากับ		       {field:{$lte:value}}
+$ne		ไม่เท่ากับ			           {field:{$ne:value}}
 
 
-$in		มีค่าใน Array		{field:{$in:[value1,value2]}}
-$nin	ไม่มีค่าใน Array		{field:{$nin:[value1,value2]}}
+$in		มีค่าใน Array		          {field:{$in:[value1,value2]}}
+$nin	ไม่มีค่าใน Array		       {field:{$nin:[value1,value2]}}
 
 $and	ตีงทั้งสองเงื่อนไข
 $or		ตรงกับเงี่อนไขใดเงื่อนไขหนึ่ง
