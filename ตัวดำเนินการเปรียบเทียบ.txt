@@ -1,0 +1,39 @@
+ตัวดำเนินการเปรียบเทียบ
+ชื่อ
+$eq		เท่ากับ				{field:value}
+$gt		มากกว่า			{field:{$gt:value}}
+$gte	มากกว่าหรือเท่ากับ		{field:{$gte:value}}
+$lt		น้อยกว่า			{field:{$lt:value}}
+$lte	น้อยกว่าหรือเท่ากับ		{field:{$lte:value}}
+$ne		ไม่เท่ากับ			{field:{$ne:value}}
+
+
+$in		มีค่าใน Array		{field:{$in:[value1,value2]}}
+$nin	ไม่มีค่าใน Array		{field:{$nin:[value1,value2]}}
+
+$and	ตีงทั้งสองเงื่อนไข
+$or		ตรงกับเงี่อนไขใดเงื่อนไขหนึ่ง
+$nor	ไม่ตรงกับเงี่อนไขใดเลย
+$not	ตรงข้ามกับเบื่อนไขที่กำหนด
+
+$match		เอาเฉพาะ Document ที่ตรงตามเงื่อนไข
+$group		จัดกลุ่ม Document และคำนวณเก็บค่าใน Output
+$project	แสสดงข้อมูล Document
+$sort		จัดเรียง Document
+$skip		ข้าม Document ตามจำนวนที่ระบุ
+$limit		จำกัดการแสดงจำนวน
+$unwind		แยกสมาชิก field array ออกเป็น Document
+$count		นับจำนวน
+$lookup		ดู Document ที่มี Collection ต่างกัน
+
+
+$group
+ตัวดำเนินการทางสถิติ
+$sum		หาผลรวม Document
+$avg		หาค่าเฉลี่ยน Document
+$min		หาค่าต่ำสุด Document
+$max		หาค่ามากสุด Document
+$first		หาค่า Document ลำดับแรก
+$last		หาค่า Document ลำดับสุดท้าย
+$push		แทรกค่า array ไปในผลลัพท์ในกลุ่ม
+$addToSet	แทรกค่า array ไปในผลลัพท์ในกลุ่มโดยไม่ซ้ำกัน

@@ -1,0 +1,102 @@
+Mongo DB
+show dbs
+### ใช้งาน
+use ( ชื่อฐานข้อมูล  )  ถ้ามีจะใช้งาน ถ้าไม่มีจะสร้างใหม่
+### ลบฐานข้อมูล
+db.dropDatabase() ก่อนจะลบต้อง use ก่อน
+### สร้าง Collection
+db.createCollection("users") 
+
+##### Collection
+db.createCollection("users") <-- สร้าง
+db.users.renameCollection("user") <-- เปลี่ยนชื่อ
+db.user.drop() <-- ลบ Collection
+
+##### Document
+เพิ่ม
+db.ชื่อCollection.insertOne({Document}) <-- db.employees.insertOne({name:"JingJing",member:"CGM",age:21})
+เพิ่มหลาย Collection
+db.ชื่อCollection.insertMany([{Document},{Document}])
+
+##### ค้นหาข้อมูล
+db.ชื่อCollection.findOne()
+db.ชื่อCollection.findOne().fied
+
+db.ชื่อCollection.find({ parameter }) เช่น db.ชื่อCollection.find({name:" "})
+
+ค้นหาข้อมูล แบบ Object
+db.employees.find({department:"โปรแกรมเมอร์","general.gender":"ชาย"})
+
+ค้นหาข้อมูล แบบ array
+db.employees.find({"social":["facebook"]})
+db.employees.find({"social":["facebook","line"]})
+
+ค้นหาข้อมูล แบบ มีการเปรียบเทียบ (มีเงี่อนไข)
+db.employees.find({salary:{$gt:15000}})
+db.employees.find({department:{$ne:"โปรแกรมเมอร์"}}) <-- ค้นหาข้อมูล "คนที่ไม่ได้เป็น โปรแกรมเมอร์"
+db.employees.find({"general.gender":{$ne:"ชาย"}})  <-- ค้นคนที่ไม่ได้เป็นผู้ชาย
+
+ค้นหาข้อมูล แบบ in,not in <--เปรียบเทียบได้มากกว่า 1 ค่า
+db.employees.find({social:{$nin:["line","twitter"]}})
+
+and or nor not
+db.employees.find({$and:[{salary:{$gt:15000}},{salary:{$lt:45000}}]})
+db.employees.find({$or:[{department:"วิศวก"},{"general.gender":"ชาย"}]})
+db.employees.find({$nor:[{address:"กรุงเทพมหานคร"},{department:"ฝ่ายขาย"}]})		ไม่ตรงกับเงื่อนไข
+db.employees.find({"general.weight":{$not:{$gte:52}}})
+
+Update Document
+db.employees.updateOne({name:"ก้อง"},{$set:{salary:80000}})
+db.employees.updateMany({address:"กรุงเทพมหานคร"},{$set:{salary:70000}})
+
+ลบ Document
+db.employees.deleteOne({name:"สมชาย"})
+db.employees.deleteMany({address:"กรุงเทพมหานคร"})
+
+
+### aggregate
+# $Project
+db.employee.aggregate([{$project:{_id:1}}])  <-- 1 _id:1	หมายถึงให้โชว์ข้อมูลแค่ fied _id เท่านั้น
+db.employee.aggregate([{$project:{_id:1,name:1}}])
+
+db.employee.aggregate([{$project:{_id:0,name:1}}])	<-- _id:0  หมายถึงจะไม่ให้โชว์ข้อมูล
+db.employee.aggregate([{$project:{_id:0,name:1,department:1}}])
+
+## ใช้ aggregate หลาย state
+db.employee.aggregate([{$match:{salary:15000}},{$project:{_id:0,name:1,salary:1,department:1}}])
+ค้นหาเงินเดือนมากกว่า 15000
+db.employee.aggregate([{$match:{salary:{$gte:15000}}},{$project:{_id:0,name:1,salary:1,department:1}}])
+
+### $count
+db.employee.aggregate([{$match:{salary:15000}},{$count:"จำนวนพนักงาน"}])	<-- $count ต้องมี fied เพื่อ output ออกมา
+db.employee.aggregate([{$match:{salary:{$gt:50000}}},{$count:"มีจำนวน"}])
+
+### $sort 
+1 เรียงจากน้อยไปมาก
+-1 เรียงจากมากไปน้อย 
+db.employee.aggregate([{$sort:{salary:1}}])
+db.employee.aggregate([{$sort:{salary:-1}}])
+
+### $limit
+db.employee.aggregate([{$project:{_id:0,name:1,address:1}},{$limit:2}]) <-- เลือกมาแค่ 2 ข้อมูล
+db.employee.aggregate([{$project:{_id:0,name:1,address:1,salary:1}},{$sort:{salary:-1}},{$limit:2}])
+
+### $skip
+db.employee.aggregate([{$project:{_id:0,name:1,department:1}},{$skip:2}]) <-- 2 ข้อมูลแรก
+
+### $group
+db.employee.aggregate([{$group:{_id:"$department",count:{$count:{}}}}]) <-- นับจำนวน department ที่อยูู่ในกลุ่ม
+
+## $sum
+db.employee.aggregate([{$group:{_id:null,"sum":{$sum:"$salary"}}}])  <-- ผลรวมของ 15  Document
+db.employee.aggregate([{$group:{_id:"$department","Sum":{$sum:"$salary"}}}])  <-- ผลรวมของ แต่ลพ Document
+db.employee.aggregate([{$match:{department:"ฝ่ายขาย"}},{$group:{_id:"$department","Sum":{$sum:"$salary"}}}])
+
+## $push จะเพิ่มข้อมูลเป็นแบบ Object
+db.employee.aggregate([{$group:{_id:"$department","Sum Salary":{$sum:"$salary"},"Detail":{$push:{name:"$name",salary:"$salary"}}}}])  <-- $push คือการนำข้อมูลมาใส่ลงไปใน fied "Detail" โดยที่จะต้องมีคัวเก็บค่าด้วยเช่น name:"$name
+
+## $addToSet จะเพิ่มข้อมูลแบบ Array
+db.employee.aggregate([{$group:{_id:"$department","Sum Salary":{$sum:"$salary"},"Detail":{$push:{name:"$name",salary:"$salary"}}}}])
+
+## $lookup
+db.employees.aggregate([{$lookup:{from:"departments",localField:"department_id",foreignField:"id",as:"Type Department"}}])		<--- การเทียบ fied
